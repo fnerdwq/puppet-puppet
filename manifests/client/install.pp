@@ -1,6 +1,8 @@
 # install the puppet client package (private)
 class puppet::client::install {
 
+  # such that no complaints about apt::update_timeout not beeing evaluated
+  include apt
 
 # TODO: OS Abhängigkeit
   apt::source { 'puppetlabs':
