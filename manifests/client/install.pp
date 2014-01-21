@@ -4,7 +4,7 @@ class puppet::client::install {
   # such that no complaints about apt::update_timeout not beeing evaluated
   include apt
 
-# TODO: OS Abhängigkeit
+# TODO: OS Abhaengigkeit
   apt::source { 'puppetlabs':
     location   => 'http://apt.puppetlabs.com',
     repos      => 'main',
