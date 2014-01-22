@@ -31,16 +31,10 @@
 class puppet (
   $manage_client = true,
   $manage_server = false,
-  $facter        = 'latest',
-  $hiera         = 'latest',
-  $version       = 'latest',
 ) inherits puppet::params {
 
   $_manage_client = str2bool($manage_client)
   $_manage_server = str2bool($manage_server)
-  validate_string($facter)
-  validate_string($hiera)
-  validate_string($version)
 
   if $_manage_client {
     include puppet::client

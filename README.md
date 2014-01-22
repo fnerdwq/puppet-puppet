@@ -47,7 +47,7 @@ include puppet
 Configure it through hiera or declare it resource-like by calling the server/client class explicitly and set the parameters, e.g.:
 
 ```puppet
-class { 'puppet':
+class { 'puppet::client':
   version = '3.4.2-1puppetlabs1',
 }
 ```
