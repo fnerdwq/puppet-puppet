@@ -1,19 +1,23 @@
 # change puppet configuration settings (private)
-# Define name/title must be in form 'key=value'
+# Define name/title must be in form 'section||key=value'
 define puppet::configfile (
-  $section,
-  $path     = '/etc/puppet/puppet.conf',
   $ensure   = present,
 )
 {
-  $settings = split($name, '=')
+  $path    = '/etc/puppet/puppet.conf'
 
-  ini_setting { "${path}: [${section}] ${name}":
+  # splitting of 'section'
+  $split   = split($name, '\|\|')
+
+  # splitting off 'setting' and 'value'
+  $setting = split($split[1], '=')
+
+  ini_setting { "puppet.conf/${split[0]}/${setting[0]}":
     ensure  => $ensure,
     path    => $path,
-    section => $section,
-    setting => $settings[0],
-    value   => $settings[1],
+    section => $split[0],
+    setting => $setting[0],
+    value   => $setting[1],
   }
 }
 

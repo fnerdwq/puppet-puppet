@@ -3,9 +3,10 @@ class puppet::params {
 
   case $::osfamily {
     'Debian': {
+      $apache_service_name = 'apache2'
     }
 #    'RedHat': {
-#      $client_package = 'puppet'
+#      $apache_service_name = 'httpd'
 #    }
     default:  {
       fail("Module ${module_name} is not supported on ${::operatingsystem}/${::osfamily}")

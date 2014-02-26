@@ -63,7 +63,9 @@ Puppet Version >= 3.4.0, due to specific hiera usage.
 
 ## TODOs
 
-* Puppet Master Configuration
 * Extend to RedHat like systems
 * Make more general version numbers possible (e.g. 3.4.2 instead of 3.4.2-1puppetlabs1), not that simple for Debian
-* ...
+* Introduce possibility to remove configuration entries (e.g. undef in config)
+* hiera\_hash for \*\_config parameters?
+* add config for [main] section
+* provision with initial puppet.conf
