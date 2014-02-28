@@ -1,0 +1,14 @@
+---
+<%# Bugfix: gsub for fixing issue https://tickets.puppetlabs.com/browse/HI-127 -%>
+# Managed by puppet.
+:backends:
+  - yaml
+
+:yaml:
+  :datadir: "<%= @hiera_datadir.gsub(/\$(\w*)/,'%{::\1}') %>"
+
+:hierarchy:
+<% @hiera_hierarchy.each do |entry| -%>
+  - "<%= entry.gsub(/\$(\w*)/,'%{::\1}') %>"
+<% end -%>
+

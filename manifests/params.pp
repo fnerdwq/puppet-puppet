@@ -1,6 +1,8 @@
 # set flavor specific variables (private)
 class puppet::params {
 
+  $config_dir = '/etc/puppet'
+
   case $::osfamily {
     'Debian': {
       $apache_service_name = 'apache2'

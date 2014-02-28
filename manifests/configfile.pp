@@ -4,7 +4,7 @@ define puppet::configfile (
   $ensure   = present,
 )
 {
-  $path    = '/etc/puppet/puppet.conf'
+  $path    = "${puppet::params::config_dir}/puppet.conf"
 
   # splitting of 'section'
   $split   = split($name, '\|\|')

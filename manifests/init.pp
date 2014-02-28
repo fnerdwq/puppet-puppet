@@ -60,13 +60,41 @@
 #
 # [*inventory_allow*]
 #   which hosts can access inventory service
-#   *Optional* (defaults to )
+#   *Optional* (defaults to dashboard.$::domain)
 #
 # [*environments_config*]
 #   A hash of hashes for extra sections of puppet.conf.
 #   The outter hash keys are the sections/environments, for the inner hashes
 #   see *agent_config*.
-#   *Optional* (defaults to )
+#   *Optional* (defaults to {})
+#
+# [*environments_dir*]
+#   If set, create this directory to check out environments.
+#   *Optional* (default to undef)
+#
+# [*environments_owner*]
+#   Owner of the environements directory
+#   *Optional* (defaults to puppet)
+#
+# [*environments_group*]
+#   Group of the environments directory
+#   *Optional* (defaults to pupppet)
+#
+# [*hiera_datadir*]
+#   Datadir for the yaml hiera backend (only yaml for now!)
+#   *Optional* (defaults to /etc/puppet/hieradata)
+#
+# [*hiera_datadir_create*]
+#   Should we create the hiera datatdir?
+#   *Optional* (defaults to true)
+#
+# [*hiera_hierarchy*]
+#   Array of the hiera hierachy.
+#   *Optional* (defaults to ['%{::clientcert}', 'common']
+#
+# [*autosign_list*]
+#   Array of entries in autosing.conf
+#   *Optional* (defaults to [])
 #
 # === Examples
 #
@@ -81,23 +109,29 @@
 # Copyright 2014 Frederik Wagner
 #
 class puppet (
-  $facter              = 'latest',
-  $hiera               = 'latest',
-  $version             = 'latest',
-  $agent_name          = 'puppet',
-  $agent_enable        = true,
-  $agent_config        = {'pluginsync' => 'true',
-                          'server'     => "puppet.${::domain}"},
-  $master              = false,
-  $master_name         = 'puppetmaster',
-  $master_enable       = true,
-  $master_config       = {},
-  $passenger           = true,
-  $inventory           = false,
-  $inventory_allow     = "dashboard.${::domain}",
-  $environments_config = {},
+  $facter               = 'latest',
+  $hiera                = 'latest',
+  $version              = 'latest',
+  $agent_name           = 'puppet',
+  $agent_enable         = true,
+  $agent_config         = { 'pluginsync' => 'true',
+                            'server'     => "puppet.${::domain}" },
+  $master               = false,
+  $master_name          = 'puppetmaster',
+  $master_enable        = true,
+  $master_config        = {},
+  $passenger            = true,
+  $inventory            = false,
+  $inventory_allow      = "dashboard.${::domain}",
+  $environments_config  = {},
+  $environments_dir     = undef,
+  $environments_owner   = 'puppet',
+  $environments_group   = 'puppet',
+  $hiera_datadir        = "${puppet::params::config_dir}/hieradata",
+  $hiera_datadir_create = true,
+  $hiera_hierarchy      = ['%{::clientcert}', 'common'],
+  $autosign_list        = [],
 ) inherits puppet::params {
-
   validate_string($facter)
   validate_string($hiera)
   validate_string($version)
@@ -112,12 +146,23 @@ class puppet (
   validate_bool(str2bool($inventory))
   validate_string($inventory_allow)
   validate_hash($environments_config)
+  if $environments_dir {
+    validate_absolute_path($environments_dir)
+  }
+  validate_string($environments_owner)
+  validate_string($environments_group)
+  validate_string($hiera_datadir)
+  validate_bool(str2bool($hiera_datadir_create))
+  validate_array($hiera_hierarchy)
+  validate_array($autosign_list)
 
   contain puppet::install
+  contain puppet::config
   contain puppet::agent::config
   contain puppet::agent::service
 
   Class['puppet::install']
+  -> Class['puppet::config']
   -> Class['puppet::agent::config']
   ~> Class['puppet::agent::service']
 
