@@ -5,10 +5,10 @@
   - yaml
 
 :yaml:
-  :datadir: "<%= @hiera_datadir.gsub(/\$(\w*)/,'%{::\1}') %>"
+  :datadir: <%= @hiera_datadir %>
 
 :hierarchy:
 <% @hiera_hierarchy.each do |entry| -%>
-  - "<%= entry.gsub(/\$(\w*)/,'%{::\1}') %>"
+  - <%= entry %>
 <% end -%>
 
