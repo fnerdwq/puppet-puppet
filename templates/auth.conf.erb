@@ -111,6 +111,10 @@ path /certificate_request
 auth any
 method find, save
 allow *
+
+path /v2.0/environments
+method find
+allow *
 <% if @inventory -%>
 
 # allow dashboard inventory
