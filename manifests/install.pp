@@ -14,54 +14,48 @@ class puppet::install {
 
 # TODO: change to *ed version for package to put only version names....
 #  user custom facts 'available_versions'
-  if $puppet::facter == 'latest' {
-    $version_facter = latest
+  if $puppet::facter =~ /^(latest|installed)$/ {
     apt::pin { 'pin_facter_version': ensure => absent }
   } else {
-    $version_facter = $puppet::facter
     apt::pin { 'pin_facter_version':
       packages => 'facter',
-      version  => $version_facter,
+      version  => $puppet::facter,
       priority => '1001',
     }
   }
 
-  if $puppet::hiera == 'latest' {
-    $version_hiera = latest
+  if $puppet::hiera =~ /^(latest|installed)$/ {
     apt::pin { 'pin_hiera_version': ensure => absent }
   } else {
-    $version_hiera = $puppet::hiera
     apt::pin { 'pin_hiera_version':
       packages => 'hiera',
-      version  => $version_hiera,
+      version  => $puppet::hiera,
       priority => '1001',
     }
   }
 
-  if $puppet::version == 'latest' {
-    $version_puppet = latest
+  if $puppet::version =~ /^(latest|installed)$/ {
     apt::pin { 'pin_puppet_version': ensure => absent }
   } else {
-    $version_puppet = $puppet::version
     apt::pin { 'pin_puppet_version':
       packages => 'puppet puppet-common',
-      version  => $version_puppet,
+      version  => $puppet::version,
       priority => '1001',
     }
   }
 
   # install required package
   package { 'facter':
-    ensure  => $version_facter,
+    ensure  => $puppet::facter,
     require => Apt::Pin['pin_facter_version'],
   }
   package { 'hiera':
-    ensure  => $version_hiera,
+    ensure  => $puppet::hiera,
     require => [ Package['facter'],
                   Apt::Pin['pin_puppet_version'] ],
   }
   package { 'puppet':
-    ensure  => $version_puppet,
+    ensure  => $puppet::version,
     name    => 'puppet',
     require => [ Package['hiera'],
                   Apt::Pin['pin_puppet_version'] ],
