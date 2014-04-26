@@ -14,7 +14,7 @@ class puppet::install {
 
 # TODO: change to *ed version for package to put only version names....
 #  user custom facts 'available_versions'
-  if $puppet::facter =~ /^(latest|installed)$/ {
+  if $puppet::facter =~ /^(latest|installed|present|absent|purged)$/ {
     apt::pin { 'pin_facter_version': ensure => absent }
   } else {
     apt::pin { 'pin_facter_version':
@@ -24,7 +24,7 @@ class puppet::install {
     }
   }
 
-  if $puppet::hiera =~ /^(latest|installed)$/ {
+  if $puppet::hiera =~ /^(latest|installed|present|absent|purged)$/ {
     apt::pin { 'pin_hiera_version': ensure => absent }
   } else {
     apt::pin { 'pin_hiera_version':
@@ -34,7 +34,7 @@ class puppet::install {
     }
   }
 
-  if $puppet::version =~ /^(latest|installed)$/ {
+  if $puppet::version =~ /^(latest|installed|present|absent|purged)$/ {
     apt::pin { 'pin_puppet_version': ensure => absent }
   } else {
     apt::pin { 'pin_puppet_version':
