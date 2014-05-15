@@ -17,6 +17,16 @@ class puppet::master::config {
     content => template('puppet/auth.conf.erb'),
   }
 
+  $fileserver = $puppet::fileserver
+
+  file {"${puppet::params::config_dir}/fileserver.conf":
+    ensure  => present,
+    owner   => 'puppet',
+    group   => 'puppet',
+    mode    => '0640',
+    content => template('puppet/fileserver.conf.erb'),
+  }
+
   if $puppet::passenger {
 
     # config.ru which fixes UTF-8 problem

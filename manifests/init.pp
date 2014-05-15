@@ -96,6 +96,17 @@
 #   Array of entries in autosing.conf
 #   *Optional* (defaults to [])
 #
+# [*fileserver*]
+#   Hash to describe fileserver.conf entries:
+#   { 'mountpoint1' => {
+#        comment => 'This is a comment',
+#        path    => '/filsystem/path',
+#        allow   => ['*.example.de','*.example.com']
+#      },
+#      ...
+#   }
+#   *Optional* (defaults to {})
+#
 # === Examples
 #
 # include puppet
@@ -131,6 +142,7 @@ class puppet (
   $hiera_datadir_create = true,
   $hiera_hierarchy      = ['%{::clientcert}', 'common'],
   $autosign_list        = [],
+  $fileserver           = {},
 ) inherits puppet::params {
   validate_string($facter)
   validate_string($hiera)
@@ -155,6 +167,7 @@ class puppet (
   validate_bool(str2bool($hiera_datadir_create))
   validate_array($hiera_hierarchy)
   validate_array($autosign_list)
+  validate_hash($fileserver)
 
   contain puppet::install
   contain puppet::config
