@@ -38,7 +38,7 @@ class puppet::install {
     apt::pin { 'pin_puppet_version': ensure => absent }
   } else {
     apt::pin { 'pin_puppet_version':
-      packages => 'puppet puppet-common',
+      packages => 'puppet puppet-common vim-puppet',
       version  => $puppet::version,
       priority => '1001',
     }
