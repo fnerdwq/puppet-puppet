@@ -57,6 +57,11 @@ class puppet::master::config {
     group   => puppet,
     content => template('puppet/hiera.yaml.erb'),
   }
+  file {'/etc/hiera.yaml':
+    ensure  => link,
+    traget  => "${puppet::params::config_dir}/hiera.yaml",
+    require => File["${puppet::params::config_dir}/hiera.yaml"],
+  }
 
   if str2bool($puppet::hiera_datadir_create) {
 
