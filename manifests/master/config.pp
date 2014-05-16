@@ -59,7 +59,7 @@ class puppet::master::config {
   }
   file {'/etc/hiera.yaml':
     ensure  => link,
-    traget  => "${puppet::params::config_dir}/hiera.yaml",
+    target  => "${puppet::params::config_dir}/hiera.yaml",
     require => File["${puppet::params::config_dir}/hiera.yaml"],
   }
 
