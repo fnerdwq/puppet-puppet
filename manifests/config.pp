@@ -26,7 +26,7 @@ class puppet::config {
   concat::fragment {"${puppet::params::config_file} - header":
     target  => $puppet::params::config_file,
     order   => 01,
-    content => '# Managed by puppet.\n',
+    content => "# Managed by puppet.\n",
   }
 
   puppet::configsection { 'main':
