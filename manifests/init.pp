@@ -58,6 +58,10 @@
 #   Should the puppetmaster be run under apache passenger
 #   *Optional* (defaults to true)
 #
+# [*merge_behavior*]
+#   For hiera > 1.2.0, the merge behavior for hiera_hash
+#   *Optional* (defaults to native)
+#
 # [*inventory*]
 #   enable inventory service in auth.conf
 #   *Optional* (defaults to false)
@@ -136,6 +140,7 @@ class puppet (
   $master_enable        = $puppet::params::master_enable,
   $master_config        = {},
   $passenger            = $puppet::params::passenger,
+  $merge_behavior       = $puppet::params::merge_behavior,
   $inventory            = $puppet::params::inventory,
   $inventory_allow      = $puppet::params::inventory_allow,
   $environments_config  = $puppet::params::environments_config,
@@ -160,6 +165,7 @@ class puppet (
   validate_bool(str2bool($master_enable))
   validate_hash($master_config)
   validate_bool(str2bool($passenger))
+  validate_re($merge_behavior,['^native$','^deep$','$^deeper$'])
   validate_bool(str2bool($inventory))
   validate_string($inventory_allow)
   validate_hash($environments_config)

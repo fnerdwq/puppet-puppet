@@ -13,6 +13,16 @@ class puppet::master::install {
     }
   }
 
+  # if deep(er) merge wanted for hiera >= 1.2.0
+  if    versioncmp($::hieraversion, '1.2.0') > 0
+    and $puppet::merge_behavior in ['deep','deeper'] {
+
+    package {'deep_merge':
+      ensure   => latest,
+      provider => gem,
+    }
+  }
+
   if $puppet::passenger {
     package {'puppetmaster-passenger':
       ensure  => $version_puppet,

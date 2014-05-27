@@ -22,6 +22,7 @@ class puppet::params {
   $master_enable        = true
   $master_config        = {}
   $passenger            = true
+  $merge_behavior       = 'native'
   $inventory            = false
   $inventory_allow      = "dashboard.${::domain}"
   $environments_config  = {}

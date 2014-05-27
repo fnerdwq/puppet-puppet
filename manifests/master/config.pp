@@ -62,6 +62,12 @@ class puppet::master::config {
 
   $hiera_datadir   = $puppet::hiera_datadir
   $hiera_hierarchy = $puppet::hiera_hierarchy
+  # merge_behavior only possible for hiera >= 1.2.0
+  if versioncmp($::hieraversion,'1.2.0') > 0 {
+    $merge_behavior = $puppet::merge_behavior
+  } else {
+    $merge_behavior = false
+  }
   file {"${puppet::params::config_dir}/hiera.yaml":
     ensure  => present,
     owner   => puppet,
