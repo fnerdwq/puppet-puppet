@@ -165,7 +165,7 @@ class puppet (
   validate_bool(str2bool($master_enable))
   validate_hash($master_config)
   validate_bool(str2bool($passenger))
-  validate_re($merge_behavior,['^native$','^deep$','$^deeper$'])
+  validate_re($merge_behavior,['^native$','^deep$','^deeper$'])
   validate_bool(str2bool($inventory))
   validate_string($inventory_allow)
   validate_hash($environments_config)
