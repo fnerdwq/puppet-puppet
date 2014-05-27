@@ -58,6 +58,12 @@ class puppet::master::config {
       group  => $puppet::environments_group,
       mode   => '0750',
     }
+
+    # ensure that Debian package example_env is away
+    file {"${puppet::environments_dir}/example_env":
+      ensure => absent,
+      force  => true,
+    }
   }
 
   $hiera_datadir   = $puppet::hiera_datadir
