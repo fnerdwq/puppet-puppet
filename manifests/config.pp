@@ -18,13 +18,19 @@ class puppet::config {
   }
 
   concat {$puppet::params::config_file:
-    owner => puppet,
-    group => puppet,
-    mode  => '0644',
+    owner          => puppet,
+    group          => puppet,
+    mode           => '0644',
+    ensure_newline => true,
+  }
+  concat::fragment {"${puppet::params::config_file} - header":
+    target  => $puppet::params::config_file,
+    order   => 01,
+    content => '# Managed by puppet.',
   }
 
   puppet::configsection { 'main':
-    order  => 01,
+    order  => 02,
     config => merge($puppet::params::main_config,
                     $puppet::main_config)
   }
