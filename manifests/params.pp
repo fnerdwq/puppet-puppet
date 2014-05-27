@@ -1,16 +1,22 @@
 # set flavor specific variables (private)
 class puppet::params {
   # Variables
-  $config_dir = '/etc/puppet'
+  $config_dir  = '/etc/puppet'
+  $config_file = "${config_dir}/puppet.conf"
 
   # Module Parameter
   $facter               = 'latest'
   $hiera                = 'latest'
   $version              = 'latest'
+  $main_config          = { 'logdir'   => '/var/log/puppet',
+                            'vardir'   => '/var/lib/puppet',
+                            'ssldir'   => '$vardir/ssl',
+                            'rundir'   => '/var/run/puppet',
+                            'factpath' => '$vardir/lib/facter'}
   $agent_name           = 'puppet'
   $agent_enable         = true
   $agent_config         = { 'pluginsync' => 'true',
-                            'server'     => "puppet.${::domain}" }
+                            'server'     => "puppet.${::domain}"}
   $master               = false
   $master_name          = 'puppetmaster'
   $master_enable        = true

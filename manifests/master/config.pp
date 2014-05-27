@@ -1,14 +1,27 @@
 # Set up puppet master configuration files (private)
 class puppet::master::config {
 
-  $configurations = prefix(
-    join_keys_to_values($puppet::master_config, '='), 'master||')
+  # if passenger is configured, add essential master parameters
+  if $puppet::passenger {
+    # These are needed when the puppetmaster is run by passenger
+    # and can safely be removed if webrick is used.
+    $passenger_master_config = {
+      'ssl_client_header'        => 'SSL_CLIENT_S_DN',
+      'ssl_client_verify_header' => 'SSL_CLIENT_VERIFY',
+    }
+  } else {
+    $passenger_master_config = {}
+  }
 
-  puppet::configfile { $configurations: }
+  puppet::configsection {'master':
+    order  => 10,
+    config => merge($puppet::params::master_config,
+                    $passenger_master_config,
+                    $puppet::master_config)
+  }
 
   $inventory       = $puppet::inventory
   $inventory_allow = $puppet::inventory_allow
-
   file {"${puppet::params::config_dir}/auth.conf":
     ensure  => present,
     owner   => 'puppet',
@@ -18,7 +31,6 @@ class puppet::master::config {
   }
 
   $fileserver = $puppet::fileserver
-
   file {"${puppet::params::config_dir}/fileserver.conf":
     ensure  => present,
     owner   => 'puppet',
@@ -28,7 +40,6 @@ class puppet::master::config {
   }
 
   if $puppet::passenger {
-
     # config.ru which fixes UTF-8 problem
     file {'/usr/share/puppet/rack/puppetmasterd/config.ru':
       ensure => present,
@@ -37,9 +48,9 @@ class puppet::master::config {
       mode   => '0644',
       source => 'puppet:///modules/puppet/config.ru',
     }
-
   }
 
+  # create environment directory
   if $puppet::environments_dir {
     file {$puppet::environments_dir:
       ensure => directory,

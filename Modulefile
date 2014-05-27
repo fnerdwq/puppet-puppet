@@ -10,4 +10,4 @@ project_page 'https://github.com/fnerdwq/puppet-puppet'
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>= 4.1.0'
 dependency 'puppetlabs/apt', '>= 1.4.0'
-dependency 'puppetlabs/inifile', '>= 1.0.0'
+dependency 'puppetlabs/concat', '>=1.1.0'

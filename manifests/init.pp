@@ -20,6 +20,10 @@
 #   Puppet version to use, use complete debian version number.
 #   *Optional* (defaults to latest)
 #
+# [*main_config*]
+#   a hash with key values for the [main] section of puppet.conf
+#   *Optional* (defaults to -> see params.pp)
+#
 # [*agent_name*]
 #   Name of puppet agent service
 #   *Optional* (defaults to puppet)
@@ -123,13 +127,14 @@ class puppet (
   $facter               = $puppet::params::facter,
   $hiera                = $puppet::params::hiera,
   $version              = $puppet::params::version,
+  $main_config          = {},
   $agent_name           = $puppet::params::agent_name,
   $agent_enable         = $puppet::params::agent_enable,
-  $agent_config         = $puppet::params::agent_config,
+  $agent_config         = {},
   $master               = $puppet::params::master,
   $master_name          = $puppet::params::master_name,
   $master_enable        = $puppet::params::master_enable,
-  $master_config        = $puppet::params::master_config,
+  $master_config        = {},
   $passenger            = $puppet::params::passenger,
   $inventory            = $puppet::params::inventory,
   $inventory_allow      = $puppet::params::inventory_allow,
@@ -146,6 +151,7 @@ class puppet (
   validate_string($facter)
   validate_string($hiera)
   validate_string($version)
+  validate_hash($main_config)
   validate_string($agent_name)
   validate_bool(str2bool($agent_enable))
   validate_hash($agent_config)
@@ -175,6 +181,8 @@ class puppet (
 
   Class['puppet::install']
   -> Class['puppet::config']
+
+  Class['puppet::install']
   -> Class['puppet::agent::config']
   ~> Class['puppet::agent::service']
 

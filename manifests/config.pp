@@ -17,4 +17,16 @@ class puppet::config {
     mode        => '0750',
   }
 
+  concat {$puppet::params::config_file:
+    owner => puppet,
+    group => puppet,
+    mode  => '0644',
+  }
+
+  puppet::configsection { 'main':
+    order  => 01,
+    config => merge($puppet::params::main_config,
+                    $puppet::main_config)
+  }
+
 }

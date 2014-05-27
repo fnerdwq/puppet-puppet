@@ -1,9 +1,10 @@
 # Set up puppet agent configuration files (private)
 class puppet::agent::config {
 
-  $configurations = prefix(
-    join_keys_to_values($puppet::agent_config, '='), 'agent||')
-
-  puppet::configfile { $configurations: }
+  puppet::configsection {'agent':
+    order  => 99,
+    config => merge($puppet::params::agent_config,
+                    $puppet::agent_config)
+  }
 
 }
